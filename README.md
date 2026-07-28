@@ -10,6 +10,30 @@
 
 ---
 
+## 📖 Documentation
+
+<div align="center">
+  <a href="docs/SETUP_GUIDE.pdf" target="_blank">
+    <img src="https://img.shields.io/badge/PDF-Setup_Guide-4f46e5?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Setup Guide PDF">
+  </a>
+  &nbsp;&nbsp;
+  <a href="docs/PROJECT_DOCUMENT.pdf" target="_blank">
+    <img src="https://img.shields.io/badge/PDF-Project_Document-7c3aed?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Project Document PDF">
+  </a>
+  &nbsp;&nbsp;
+  <a href="docs/SETUP_GUIDE.md" target="_blank">
+    <img src="https://img.shields.io/badge/Markdown-Setup_Guide-10b981?style=for-the-badge&logo=markdown&logoColor=white" alt="Setup Guide MD">
+  </a>
+</div>
+
+| Document | Format | Description |
+|----------|--------|-------------|
+| **[Setup Guide](docs/SETUP_GUIDE.pdf)** | PDF (5 pages) | Step-by-step installation, configuration, and troubleshooting |
+| **[Project Document](docs/PROJECT_DOCUMENT.pdf)** | PDF (8 pages) | Full architecture, API reference, loop engineering, and deployment |
+| **[Setup Guide (Markdown)](docs/SETUP_GUIDE.md)** | Markdown | Lightweight text version of the setup guide |
+
+---
+
 ## 📋 Table of Contents
 
 - [Architecture](#-architecture)
