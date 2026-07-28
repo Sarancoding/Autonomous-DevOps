@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autodevops-frontend
+  labels:
+    app: autodevops
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: autodevops
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: autodevops
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: autodevops-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5173
+          env:
+            - name: VITE_API_URL
+              value: "http://autodevops-backend:8000"
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+            requests:
+              cpu: "200m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5173
+            initialDelaySeconds: 10
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autodevops-frontend
+  labels:
+    app: autodevops
+    component: frontend
+spec:
+  selector:
+    app: autodevops
+    component: frontend
+  ports:
+    - port: 5173
+      targetPort: 5173
+      protocol: TCP
+      name: http
+  type: LoadBalancer

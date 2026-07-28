@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  # ==========================================================================
+  # Backend — FastAPI + LangGraph Agent
+  # ==========================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autodevops-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_API_BASE=${LLM_API_BASE:-https://api.openai.com/v1}
+      - LLM_CHEAP_MODEL=gpt-4o-mini
+      - LLM_CAPABLE_MODEL=gpt-4o
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - GITHUB_WEBHOOK_SECRET=${GITHUB_WEBHOOK_SECRET:-}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=https://cloud.langfuse.com
+      - DOCKER_ENABLED=true
+      - SANDBOX_TIMEOUT=120
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # For Docker-in-Docker sandbox
+    networks:
+      - autodevops-network
+
+  # ==========================================================================
+  # Frontend — React + Vite
+  # ==========================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: autodevops-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://backend:8000
+    depends_on:
+      - backend
+    networks:
+      - autodevops-network
+
+  # ==========================================================================
+  # Redis (optional — for job state persistence and pub/sub)
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: autodevops-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - autodevops-network
+
+networks:
+  autodevops-network:
+    driver: bridge
+
+volumes:
+  redis-data:
